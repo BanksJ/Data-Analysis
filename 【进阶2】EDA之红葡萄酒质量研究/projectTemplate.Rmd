@@ -1,0 +1,486 @@
+红葡萄酒质量研究
+========================================================
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
+# Load all of the packages that you end up using
+# in your analysis in this code chunk.
+
+# Notice that the parameter "echo" was set to FALSE for this code chunk.
+# This prevents the code from displaying in the knitted HTML output.
+# You should set echo=FALSE for all code chunks in your file.
+
+library(ggplot2)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Load_the_Data}
+# Load the Data
+df = read.csv('wineQualityReds.csv')
+```
+
+# Univariate Plots Section
+```{r echo=FALSE, message=FALSE, warning=FALSE, Univariate_Plots}
+dim(df)
+str(df)
+summary(df)
+```
+    数据集包含13个字段，1599个观测值
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 固定酸度
+ggplot(aes(x=fixed.acidity), data=df) +
+    geom_histogram(bins=60)
+summary(df$fixed.acidity)
+```
+    固定酸度呈稍左偏正态分布，取值主要集中在7到9之间。最大值15.90过大，因此平均值8.32不具有代表性，中位数7.90更能说明集中趋势。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 挥发酸度
+ggplot(aes(x=volatile.acidity), data=df) +
+    geom_histogram(bins=60)
+summary(df$volatile.acidity)
+```
+    挥发酸度部分数据过高，整体主要集中在0.4和0.6附近，呈双峰分布。中位数0.52，均值0.5278。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 柠檬酸
+ggplot(aes(x=citric.acid), data=df) +
+    geom_histogram(bins=100)
+summary(df$citric.acid)
+head(sort(summary(factor(df$citric.acid)), decreasing = T))
+```
+    柠檬酸呈现个别取值统计数异常高。最小值0，最大值1，平均值0.271。柠檬酸转换为分类变量统计观察，看具体哪些值出现次数过多，剔除掉后再画图观察。去掉排名前五的值后，可以看到，柠檬酸的分布比较均匀。1.00属于极值。
+    
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 柠檬酸
+ggplot(aes(x=citric.acid), 
+       data=subset(df,!citric.acid %in% c(0,0.49,0.24,0.02,0.26,0.1))) +
+    geom_histogram(bins=100)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 残糖
+ggplot(aes(x=residual.sugar), data=df) +
+    geom_histogram(bins=60)
+summary(df$residual.sugar)
+```
+    残糖很明显的长尾数据，最小值0.9，最大值15.5，中位数2.20，3/4分位数2.6。放大数据集中部分再次观察
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 残糖
+ggplot(aes(x=residual.sugar), data=subset(df, residual.sugar<=2.6)) +
+    geom_histogram(bins=60)
+head(sort(summary(factor(df$residual.sugar)), decreasing = T),30)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 氯化物
+ggplot(aes(x=chlorides), data=df) +
+    geom_histogram(bins=60)
+summary(df$chlorides)
+```
+    氯化物也存在个别极值，放大集中部分再观察。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 氯化物
+ggplot(aes(x=chlorides), data=subset(df,chlorides<=0.09)) +
+    geom_histogram(bins=60)
+head(sort(summary(factor(df$chlorides)), decreasing = T),30)
+```
+    很容易看出，氯化物数据集中在0.08周围。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 游离二氧化硫
+ggplot(aes(x=free.sulfur.dioxide), data=df) +
+    geom_histogram(bins=60)
+summary(df$free.sulfur.dioxide)
+```
+    游离二氧化硫含量随着数值的增大，出现的机会变少,多数在20以下，中位数为14。
+
+```{r  echo=FALSE, message=FALSE, warning=FALSE}
+# 总二氧化硫
+ggplot(aes(x=total.sulfur.dioxide), data=df) +
+    geom_histogram(bins=60)
+summary(df$total.sulfur.dioxide)
+```
+    总二氧化硫与游离二氧化硫趋势相同，中位数为38。对总二氧化硫含量进行对数转换后，可以看出数据分布规整很多，更接近正态分布。
+    
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 总二氧化硫
+ggplot(aes(x=total.sulfur.dioxide), data=df) +
+    geom_histogram(bins=60) +
+    scale_x_log10() 
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 密度
+ggplot(aes(x=density), data=df) +
+    geom_histogram(bins=60)
+summary(df$density)
+```
+    密度数据分布接近正态，主要集中在0.995到0.998之间。中位数为0.9968,3/4位数为0.9978。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# pH
+ggplot(aes(x=pH), data=df) +
+    geom_histogram(bins=60)
+summary(df$pH)
+```
+    pH值数据分布规整，主要集中在3.2到3.4之间，平均值3.311，最小值2.740，最大值4.010。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 硫酸盐
+ggplot(aes(x=sulphates), data=df) +
+    geom_histogram(bins=60)
+summary(df$sulphates)
+```
+    硫酸盐含量是长尾数据，最小值0.3300，最大值2, 3/4位数0.73。对该变量做对数转换，再次观察。
+   
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 硫酸盐
+ggplot(aes(x=sulphates), data=df) +
+    geom_histogram(bins=60) +
+    scale_x_log10()
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 酒精
+ggplot(aes(x=alcohol), data=df) +
+    geom_histogram(bins=60)
+summary(df$alcohol)
+```
+    酒精含量稍显左偏，最小值8.40，最大值14.90，中位数10.20。主要集中在9.50到11.10之间。尝试对其进行因子转换再观察。
+    
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+head(sort(summary(factor(df$alcohol)), decreasing = T),30)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 品质
+ggplot(aes(x=quality), data=df) +
+    geom_bar()
+sort(summary(factor(df$quality)), decreasing = T)
+```
+    quality众数为5，其次为6。数据集的红酒品质整体处于中等偏上。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+df$organic.acid = df$fixed.acidity + df$citric.acid
+df$dissolve.gas = df$free.sulfur.dioxide + df$total.sulfur.dioxide
+df$mineral.salt = df$chlorides + df$sulphates
+```
+    非挥发酸度主要是酒石酸，将酒石酸与柠檬酸相加，创建有机酸变量。将总二氧化硫与游离二氧化硫相加，创建溶解气体变量。将氯化物与硫酸盐相加，创建矿物盐变量。将品质由int型转为分类变量。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 有机酸含量
+ggplot(aes(x=organic.acid), data=df) +
+    geom_histogram(bins=60)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 溶解气体
+ggplot(aes(x=dissolve.gas), data=df) +
+    geom_histogram(bins=60)
+summary(df$dissolve.gas)
+```
+    溶解气体是长尾数据，对其进行对数转换，可以看到分布集中很多。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 溶解气体
+ggplot(aes(x=dissolve.gas), data=df) +
+    geom_histogram(bins=60) +
+    scale_x_log10()
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 矿物盐
+ggplot(aes(x=mineral.salt), data=df) +
+    geom_histogram(bins=60)
+```
+
+
+# Univariate Analysis
+
+### What is the structure of your dataset?
+    数据集有13个变量，11个是输入变量，一个是品质变量，一个是计数变量。有1599条记录。11个输入变量分别是，固定酸度、挥发酸度、柠檬酸、残糖、氯化物、游离二氧化硫、总二氧化硫、密度、pH、硫酸盐、酒精，所有变量都是num型。
+
+### What is/are the main feature(s) of interest in your dataset?
+    残糖含量、有机酸含量、酒精含量，应该是影响葡萄酒品质的最主要因素。酒精是最直接的发酵产物，有机酸可以平衡口感，抗氧化，主要包括酒石酸和柠檬酸，残糖可以带来葡萄酒的甜味。
+
+### What other features in the dataset do you think will help support your investigation into your feature(s) of interest?
+    矿物盐的含量，溶解气体的含量，总酸、水分都会影响葡萄酒品质。但相对来说，矿物盐含量应该是接下来影响葡萄酒品质的主要因素。
+
+### Did you create any new variables from existing variables in the dataset?
+    为了更方便的研究主要因素，我增加了三个变量，有机酸含量、矿物盐含量、溶解气体含量。有机酸含量等于固定酸度与柠檬酸之和，矿物盐含量等于氯化物和硫酸盐之和，溶解气体含量等于游离二氧化硫与总二氧化硫之和。
+    
+### Of the features you investigated, were there any unusual distributions? Did you perform any operations on the data to tidy, adjust, or change the form of the data? If so, why did you do this?
+    总二氧化硫含量是长尾数据，分布不集中，对其进行转换可以看到更为集中的数据分布。同理，对新增加的溶解气体含量也进行了对数变换。硫酸盐的分布也是如此，对其进行对数转换观察，才可以看到较为集中的数据。但硫酸盐和氯化物合成的矿物盐变量表现的很集中，并没有做转换。之后因为想了解柠檬酸、残糖、酒精的具体数值频数，对他们进行了factor转换，然后汇总观察。除此之外，品质数据是num型，但它更应该是factor变量，故对其进行了转换。
+
+
+# Bivariate Plots Section
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 提取子集分析
+df_analysis = df[c('residual.sugar','organic.acid','alcohol','mineral.salt','dissolve.gas','sulphates','pH','density','volatile.acidity','quality')]
+cor(df_analysis)
+```
+    pH值和有机酸含量显著相关，有机酸含量和酒精含量与密度显著相关。与品质相关性最强两个因素分别是酒精（0.476）、挥发性酸（-0.391）。
+    
+```{r echo=FALSE, message=FALSE,  warning=FALSE, fig.width = 12, fig.height = 12}
+library(GGally)
+ggpairs(df_analysis)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 酒精含量与品质
+ggplot(aes(group=quality,x=quality,y=alcohol),data=df_analysis) +
+    stat_summary(fun.y=mean, geom='point',shape=4) +
+    geom_boxplot(alpha=0.5) +
+    geom_jitter(alpha=0.2)
+
+library(dplyr)
+# 按照品质分类汇总观察
+df %>%
+    group_by(quality) %>%
+    summarise(mean_alcohol = mean(alcohol),
+          median_alcohol = median(alcohol),
+          min_alcohol = min(alcohol),
+          max_alcohol = max(alcohol),
+          n = n()) %>%
+    arrange(quality)
+```
+    直接观察品质与酒精之间的散点图似乎看不出什么，加入透明度以及抖动再次观察。似乎相关性都体现在集中度上了,散点依然看不出什么明显的趋势。意识到此时品质的数值型，但都只取1到10的整数值，转化为factor，画箱线图再次观察。这次可以看到，酒精含量与品质之间似乎呈现一种指数相关的关系，品质越高，酒精含量也高。
+    
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 挥发性酸与品质
+ggplot(aes(group=quality,x=quality,y=volatile.acidity),data=df_analysis) +
+    geom_boxplot() +
+    stat_summary(fun.y=mean, geom='point',shape=4)
+# 按品质分类汇总挥发酸
+df %>%
+    group_by(quality) %>%
+    summarise(mean_volatile.acidity = mean(volatile.acidity),
+          median_volatile.acidity = median(volatile.acidity),
+          min_volatile.acidity = min(volatile.acidity),
+          max_volatile.acidity = max(volatile.acidity),
+          n = n()) %>%
+    arrange(quality)
+```
+    同样，绘制挥发性酸与品质之间的箱线图，可以发现，呈现一个较为明显的负相关性。再分别观察下，其他变量与品质的箱线图。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 有机酸
+ggplot(aes(group=quality,x=quality,y=organic.acid),data=df_analysis) +
+    geom_boxplot()
+# 按品质分类汇总有机酸
+df %>%
+    group_by(quality) %>%
+    summarise(mean_organic.acid = mean(organic.acid),
+          median_organic.acid = median(organic.acid),
+          min_organic.acid = min(organic.acid),
+          max_organic.acid = max(organic.acid),
+          n = n()) %>%
+    arrange(quality)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 残糖
+ggplot(aes(group=quality,x=quality,y=residual.sugar),
+       data=subset(df_analysis,residual.sugar<=4)) +
+    geom_boxplot() +
+    geom_jitter(alpha=0.3) +
+    coord_cartesian(ylim = c(1,3))
+```
+    
+    大部分残糖含量都在4以下，去掉4以上的数据，画箱线图观察。确实，品质的变化与残糖含量，并没有明显的相关性。
+   
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 矿物盐
+ggplot(aes(group=quality,x=quality,y=sulphates),data=df_analysis) +
+    geom_boxplot()
+# 溶解气体
+ggplot(aes(group=quality,x=quality,y=dissolve.gas),data=df_analysis) +
+    geom_boxplot()
+# pH
+ggplot(aes(group=quality,x=quality,y=pH),data=df_analysis) +
+    geom_boxplot()
+# 密度
+ggplot(aes(group=quality,x=quality,y=density),data=df_analysis) +
+    geom_boxplot()
+# 固定酸
+ggplot(aes(group=quality,x=quality,y=fixed.acidity),data=df) +
+    geom_boxplot()
+# 柠檬酸
+ggplot(aes(group=quality,x=quality,y=citric.acid),data=df) +
+    geom_boxplot()
+# 柠檬酸与品质相关系数
+with(df, cor(as.numeric(quality),citric.acid))
+# 按照品质分类汇总柠檬酸含量
+df %>%
+    group_by(quality) %>%
+    summarise(mean_citric.acid = mean(citric.acid),
+          median_citric.acid = median(citric.acid),
+          min_citric.acid = min(citric.acid),
+          max_citric.acid = max(citric.acid),
+          n = n()) %>%
+    arrange(quality)
+```
+    可以看出，之前我将固定酸与柠檬酸合成变量有机酸，与品质变量相关性并不高。但是单独来看，柠檬酸与品质是有较明显的相关性，相关系数0.23。
+
+# Bivariate Analysis
+
+### Talk about some of the relationships you observed in this part of the investigation. How did the feature(s) of interest vary with other features in the dataset?
+    一开始我认为，残糖含量、有机酸含量、酒精含量是影响品质的主要因素，除此之外还添加了矿物盐含量、溶解气体含量。希望能够把影响品质的因素按照类别合成大块来研究，这五方面会决定品质。但是具体分析的时候发现：
+    1.最影响品质的两个因素是酒精含量、挥发性酸含量。
+    2.合成的大块误导了我的研究，尽管品质与有机酸含量的相关性不明显。但与柠檬酸的相关性较强。
+    3.溶解气体、矿物盐含量、pH、密度这些变量都与品质相关性不明显。
+    因此，酒精含量、柠檬酸含量、挥发性酸含量，是影响品质的最关键三个因素。
+
+### Did you observe any interesting relationships between the other features (not the main feature(s) of interest)?
+    残糖含量，大部分的残糖含量都在5以下。根据散点图可以看出，当残糖成分过于高，那么酒的品质一般不会高于5分，主要集中在3分和4分。
+
+### What was the strongest relationship you found?
+    葡萄酒本质还是酒，最强相关的还是酒精含量，在各种化学成分里是最关键的影响因素。其次就是酸，酸可以平衡口感，抗氧化。但并不是每一种酸都会强相关，比如柠檬酸与品质相关性高，而同为有机酸的固定酸度（酒石酸）与品质相关性就会低一些。还有挥发性酸，也是影响品质的主要因素。其他因素，与品质的相关性较低。
+
+
+# Multivariate Plots Section
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 硫酸盐、氯化物、品质
+ggplot(aes(x=sulphates,y=chlorides),data=df) +
+    geom_jitter(aes(color=factor(quality)), alpha=1/2) +
+    scale_color_brewer(palette = "Blues")
+```
+   
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 硫酸盐、氯化物、品质
+ggplot(aes(x=sulphates,y=chlorides,color=factor(quality)),
+       data=subset(df, sulphates<=1&chlorides<=0.2)) +
+    geom_jitter(alpha=1/2) +
+    scale_color_brewer(palette = "Blues") +
+    geom_smooth(method = "lm", se = FALSE,size=1)
+cor(df$sulphates, df$quality)
+```
+    只观察硫酸盐小于1，氯化物小于0.2部分。似乎硫酸盐含量也对品质由较强的影响，相关系数0.251，这在之前的合并中被忽略了。除此之外，不同品质下，硫酸盐含量与氯化物含量的趋势线坡度明显不同，猜测可能其比值可能会影响品质。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 氯化物/硫酸盐、品质
+ggplot(aes(group=quality,y=chlorides/sulphates,x=quality), data=df) +
+    geom_boxplot() +
+    stat_summary(fun.y=mean, geom='point',shape=4)
+# 氯化物/硫酸盐、品质的相关系数
+cor((df$chlorides/df$sulphates), df_analysis$quality)
+# 硫酸盐/氯化物、品质的相关系数
+cor((df$sulphates/df$chlorides), df_analysis$quality)
+# 创建硫酸盐/氯化物
+df$s_div_c = df$sulphates/df$chlorides
+```
+    从图中可以看出，该比值与品质由明显相关性。氯化物/硫酸盐、品质的相关系数为-0.309，有明显相关性。尝试使用硫酸亚/氯化物、品质，得出相关系数0.364。这个结果要比之前的观察更加好。决定创建该比值变量，以便后期建模使用。
+    
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# pH、柠檬酸、品质
+ggplot(aes(x=pH,y=citric.acid,color=factor(quality)), data=df) +
+    geom_jitter(alpha=0.2) +
+    scale_color_brewer(palette = "Blues") +
+    geom_smooth(method = "lm", se = FALSE,size=1)
+```
+    
+    柠檬酸与pH之间成反比关系，但是品质为3的趋势线坡度明显不同于其他。猜测柠檬酸与pH的比值可能与品质有关。当这种比例关系小于某个值时，可能会造成葡萄酒品质突降。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# pH、挥发性酸、品质
+ggplot(aes(x=pH,y=volatile.acidity,color=factor(quality)), data=df) +
+    geom_jitter(alpha=0.2) +
+    scale_color_brewer(palette = "Blues") +
+    geom_smooth(method = "lm", se = FALSE,size=1)
+```
+    
+    挥发性酸与PH值成正比，与柠檬酸相似的是，在品质为3的等级下，趋势线的坡度明显不同于其他品质。同样，猜测挥发性酸与PH的比值与品质有关。当其大于某个值时，可能会造成品质突降。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 柠檬酸/有机酸、品质
+ggplot(aes(group=quality,y=citric.acid/organic.acid,x=quality), data=df) +
+    geom_boxplot() +
+    stat_summary(fun.y=mean, geom='point',shape=4)
+# 柠檬酸/有机酸、品质的相关系数
+cor((df$citric.acid/df$organic.acid), df_analysis$quality)
+```
+    柠檬酸占有机酸的比例与品质成正相关，相关系数0.21。相比之下，柠檬酸本身与品质的相关度更高。
+    
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 建模
+m1 <- lm(quality~alcohol, data =df )
+m2 <- update(m1, ~ . + volatile.acidity)
+m3 <- update(m2, ~ . + s_div_c)
+# 查看结果
+library(memisc)
+mtable(m1,m2,m3)
+```
+
+# Multivariate Analysis
+
+### Talk about some of the relationships you observed in this part of the investigation. Were there features that strengthened each other in terms of looking at your feature(s) of interest?
+    在多变量观察的时候，通过引入不同品质下的趋势线，看到其他两个变量比值与品质的关系。尤其是找到了硫酸盐/氯化物与品质之间的明显相关。同样观察了感兴趣的柠檬酸在有机酸占比与品质的关系，结果并不理想，甚至低于柠檬酸本身与品质的相关性。于是决定使用新变量硫酸盐/氯化物来代替柠檬酸建模。
+
+### Were there any interesting or surprising interactions between features?
+    各个变量都属于数值型变量，只有品质可转为factor观察。想观察双变量之间的关系是否对品质有影响，于是引入不同品质下，双变量的趋势线，该趋势线的坡度可以说明双变量之间的关系，结合品质，观察到的结果有：
+    1.硫酸盐/氯化物的比值与品质有明显相关性，相关系数为0.364。
+    2.柠檬酸与pH值成反比，柠檬酸/pH如果过于小，会对品质造成严重影响,品质下降很快。
+    3.挥发性酸与pH值成正比，挥发性酸/pH如果过于大，会对品质造成严重影响，品质下降很快。
+    4.柠檬酸本身与品质的相关性，高于柠檬酸/有机酸与品质的相关性。
+
+### OPTIONAL: Did you create any models with your dataset? Discuss the strengths and limitations of your model.
+
+    是的，建立了一个线性模型。分别使用酒精含量、挥发酸度、硫酸盐/氯化物。但是效果并不是很理想。整个模型是线性模型，而品质应该属于分类变量。在分析的过程中，是使用箱线图完成分析，结合相关系数，找出主要因素，建立的线性模型。如果能使用某些分类模型去预测，效果可能会更好。
+
+------
+
+# Final Plots and Summary
+
+### Plot One
+```{r echo=FALSE, message=FALSE, warning=FALSE, Plot_One}
+ggplot(aes(x=volatile.acidity), data=df) +
+    geom_histogram(bins=60, fill=I("#F79420"), color='black') +
+    scale_x_continuous(aes(xlab='Volatile Acidity'), breaks = seq(0,2,0.1)) +
+    ggtitle('Volatile Acidity Histogram')
+```
+
+### Description One
+    挥发性酸的分布直方图，存在个别极值，呈现双峰分布。主要围绕在0.35和0.6周围
+
+### Plot Two
+```{r echo=FALSE, message=FALSE, warning=FALSE, Plot_Two}
+ggplot(aes(group=quality,x=quality,y=alcohol),data=df_analysis) +
+    geom_boxplot() +
+    xlab('Quality') +
+    ylab('Alcohol') +
+    stat_summary(fun.y=mean, geom='point',shape=4) +
+    ggtitle('Quality & Alcohol')
+```
+
+### Description Two
+    酒精含量与品质的箱线图，可以看出，酒精含量与品质成正相关。看中位数，品质越高的葡萄酒，酒精含量的中位数同样高。
+
+### Plot Three
+```{r echo=FALSE, message=FALSE, warning=FALSE, Plot_Three}
+library(RColorBrewer)
+ggplot(aes(x=sulphates,y=chlorides,color=factor(quality)),
+           data=subset(df, sulphates<=1&chlorides<=0.2)) +
+    # 改变调色板图例
+    scale_color_brewer(type = 'div',guide = guide_legend(title = 'Quality', reverse = T,
+    override.aes = list(alpha = 1, size = 2)), palette='Blues') +
+    geom_jitter(alpha=0.5) +
+    # 改变x轴所显示的数字
+    scale_x_continuous(breaks = seq(0.1,1.5,0.1)) +
+    geom_smooth(method = "lm", se = FALSE,size=1) +
+    xlab('Sulphates') +
+    ylab('Chlorides') +
+    ggtitle('Chlorides~Sulphates By Quality')
+```
+
+### Description Three
+    观察到不同品质下，硫酸盐与氯化物的趋势线坡度均不相同。猜测硫酸盐与氯化物之间的关系会对品质造成明显影响。通过计算相关系数得出，硫酸盐/氯化物与品质有明显相关性，相关系数为0.364
+
+------
+
+# Reflection
+    数据集含有1599条记录，11个输入变量，一个结果变量，所有变量都为数值型。在最初开始，我错误的将部分变量合并为大的分类，导致没能观察到正确的相关性。比如，我猜测有机酸、酒精、残糖含量会与葡萄酒品质相关性更强，而根据之后的探索得出的结果是，酒精、挥发性酸、硫酸盐/氯化物与品质有明显相关性。
+    之后根据探索的结果，初步建立了线性模型，预测效果不是很好。我猜测，是因为尽管找到的变量与品质相关性更强，也有一定的线性关系。但是，葡萄酒品质的预测按照1到10的得分，更接近于分类问题，线性模型更适合预测连续性结果，对于分类问题采用分类模型可能会有一个更好的结果。
+    除此之外，对多变量的探索分析还不够深入，尤其是硫酸盐与氯化物的比值对品质有较大影响的发现，让我忽然意识到，各个化学成分之间的相互作用才是影响品质的关键因素，并不是单独的某一个化学成分，或者某一类化学成分，这也符合常识。我需要更深入的研究多变量之间的关系，比如观察在不同品质下，所有变量两两组合的趋势线。这是继续深入研究，优化模型的一个方向。
+    如果能有更多、更大的数据集，可能还会发现更有趣的现象。也可以在已有数据集下使用分类模型，估计会得到一个更好的预测模型。
