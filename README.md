@@ -1,29 +1,45 @@
-¡¾Êý¾Ý·ÖÎöÈëÃÅÏîÄ¿¡¿</br>
+ï»¿# æ•°æ®åˆ†æž
+æ ‡ç­¾ï¼ˆç©ºæ ¼åˆ†éš”ï¼‰ï¼š Udacity åˆ†æž å…¥é—¨ è¿›é˜¶
 
-1.ÐÄÀíÑ§Ë¹ÌØÂ³ÆÕÐ§Ó¦Ì½Ë÷£¨Í³¼ÆÑ§»ù´¡£©</br>
+---
 
-2.Ì½Ë÷Ì©Ì¹Äá¿ËÊý¾Ý¼¯£¨Jupyter NoteBook && Pandas && Numpy£©</br>
+## å…¥é—¨é¡¹ç›®
 
-3.Tableau¿ÉÊÓ»¯µçÓ°ÊÐ³¡£¨Tableau£©</br>
+---
 
-4.Éè¼ÆAB²âÊÔÖ®Ãâ·ÑÊÔÑ§É¸Ñ¡Æ÷£¨AB²âÊÔÀíÂÛ£©</br>
+- ç»Ÿè®¡å­¦åŸºç¡€
+  + å¿ƒç†å­¦æ–¯ç‰¹é²æ™®æ•ˆåº”æŽ¢ç´¢
+- Jupyter NoteBook && Pandas && Numpy
+  + æŽ¢ç´¢æ³°å¦å°¼å…‹æ•°æ®é›†
+- Tableau
+  + Tableauå¯è§†åŒ–ç”µå½±å¸‚åœº
+- ABæµ‹è¯•ç†è®º
+  + è®¾è®¡ABæµ‹è¯•ä¹‹å…è´¹è¯•å­¦ç­›é€‰å™¨
+
+---
+
+## è¿›é˜¶é¡¹ç›®
+
+---
+
+- MongoDB
+  + æ•´ç†OpenStreetMapæ•°æ®
+- Rè¯­è¨€æ•°æ®åˆ†æžå»ºæ¨¡
+  + EDAä¹‹çº¢è‘¡è„é…’è´¨é‡ç ”ç©¶
+- æœºå™¨å­¦ä¹ å…¥é—¨
+  + æœºå™¨å­¦ä¹ å®‰ç„¶æ•°æ®é›†æ¬ºè¯ˆæ¨¡åž‹
+- æ•°æ®å¯è§†åŒ–-D3.JS
+  + æ£’çƒæ‰‹èƒ½åŠ›å¯è§†åŒ–åˆ†æž
+
+---
+
+##ç›®æ ‡
+
+* ç³»ç»ŸåŒ–çš„æŽŒæ¡æ•°æ®åˆ†æžåŸºç¡€çŸ¥è¯†
+* è¿›ä¸€æ­¥ç†è§£æ•°æ®åˆ†æžä»·å€¼
 
 
 
-¡¾Êý¾Ý·ÖÎö½ø½×ÏîÄ¿¡¿</br>
-
-1.ÕûÀíOpenStreetMapÊý¾Ý£¨MongoDB£©</br>
-
-2.EDAÖ®ºìÆÏÌÑ¾ÆÖÊÁ¿ÑÐ¾¿£¨RÓïÑÔÊý¾Ý·ÖÎö½¨Ä££©</br>
-
-3.»úÆ÷Ñ§Ï°°²È»Êý¾Ý¼¯ÆÛÕ©Ä£ÐÍ£¨»úÆ÷Ñ§Ï°ÈëÃÅ£©</br>
-
-4.°ôÇòÊÖÄÜÁ¦¿ÉÊÓ»¯·ÖÎö£¨Êý¾Ý¿ÉÊÓ»¯-D3.JS£©</br>
 
 
 
-¡¾Ä¿µÄ¡¿</br>
-
-1.ÏµÍ³»¯µÄÕÆÎÕÊý¾Ý·ÖÎö»ù´¡ÖªÊ¶</br>
-
-2.½øÒ»²½Àí½âÊý¾Ý·ÖÎö¼ÛÖµ</br>
